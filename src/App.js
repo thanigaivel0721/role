@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import './styles.css'; // Import CSS styles
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import AdminDashboard from './AdminDashboard';
+import UserDashboard from './UserDashboard';
+import LoginPage from './LoginPage';
+import ProtectedRoute from './ProtectedRoute';
 
-function App() {
+const App = () => {
+  const [userRole, setUserRole] = useState(null); // Store the logged-in user's role
+
+  const handleLogin = (role) => {
+    setUserRole(role); // Set role based on login
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
+
+          {/* Admin Dashboard */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute userRole={userRole} requiredRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* User Dashboard */}
+          <Route
+            path="/user"
+            element={
+              <ProtectedRoute userRole={userRole} requiredRole="user">
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Redirect unauthorized users */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
