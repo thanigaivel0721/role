@@ -1,36 +1,26 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
-const users = {
-  admin: { id: 'admin', password: 'admin123' }, // Admin credentials
-  user: { id: 'user', password: 'user123' } // User credentials
-};
-
-const LoginPage = ({ onLogin }) => {
+const LoginPage = ({ users, onLogin }) => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    // Check for admin credentials
-    if (userId === users.admin.id && password === users.admin.password) {
-      onLogin('admin'); // Set the role in the parent component
-      navigate('/admin'); // Redirect to admin dashboard
-    } 
-    // Check for user credentials
-    else if (userId === users.user.id && password === users.user.password) {
-      onLogin('user'); // Set the role in the parent component
-      navigate('/user'); // Redirect to user dashboard
+    if (users[userId] && users[userId].password === password) {
+      const role = users[userId].role; // Get role from users object
+      onLogin(role);
+      navigate(`/${role}`);
     } else {
-      setError('Invalid user ID or password!'); // Show error if credentials are incorrect
+      setError('Invalid user ID or password!');
     }
   };
 
   return (
     <div className="login-page">
       <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Error message */}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <input
         type="text"
@@ -38,7 +28,7 @@ const LoginPage = ({ onLogin }) => {
         value={userId}
         onChange={(e) => setUserId(e.target.value)}
       />
-      
+
       <input
         type="password"
         placeholder="Password"
@@ -47,6 +37,8 @@ const LoginPage = ({ onLogin }) => {
       />
 
       <button onClick={handleLogin}>Login</button>
+      
+      <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
     </div>
   );
 };
