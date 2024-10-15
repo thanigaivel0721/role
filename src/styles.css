@@ -3,7 +3,9 @@ body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #e9ecef;
+  background-image: url(https://images.squarespace-cdn.com/content/v1/54fc8146e4b02a22841f4df7/1613993182428-R5SIXOIEUZ5FP6XTU9XE/Cover.png);
+  background-repeat: no-repeat;
+  background-size: cover;
   color: #343a40;
 }
 
